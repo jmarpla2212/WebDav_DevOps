@@ -4,7 +4,7 @@ services:
         image: bytemark/webdav
         restart: always
         ports:
-            - "80:80"
+            - "8081:80"
         environment:
             AUTH_TYPE: Digest
             USERNAME: frodo
@@ -12,3 +12,15 @@ services:
             LOCATION: /webdav
         volumes:
             - /srv/dav:/var/lib/dav
+
+    reverseproxy:
+        image: scheele/reverseproxy
+        ports:
+          - 82:8081
+        restart: always
+
+    nginx:
+        depends_on:
+          - reverseproxy
+        image: nginx:alpine
+        restart: always
